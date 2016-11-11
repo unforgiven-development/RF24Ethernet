@@ -1,4 +1,4 @@
-// Arduino DNS client for Enc28J60-based Ethernet shield
+// Arduino DNS client for ENC28J60-based Ethernet shields and modules
 // (c) Copyright 2009-2010 MCQN Ltd.
 // Released under Apache License, version 2.0
 
