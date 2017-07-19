@@ -21,7 +21,6 @@
 #include <Arduino.h>
 #include "clock-arch.h"
 
-clock_time_t clock_time(void)
-{
+clock_time_t clock_time(void) {
 	return (clock_time_t)millis();
 }

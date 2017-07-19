@@ -1,16 +1,13 @@
-/** @file uip-conf.h*/
 /**
- * \name User configuration options
- * @{
+ * \file uip-conf.h
  *
- * uIP has a number of configuration options that can be overridden
- * for each project. These are kept in a project-specific uip-conf.h
- * file and all configuration names have the prefix UIP_CONF.
- * Some of these options are specific to RF24Ethernet.
- */
-
-/*
- * Copyright (c) 2006, Swedish Institute of Computer Science.
+ * \author		Gerad Munsch <gmunsch@unforgivendevelopment.com>
+ * \author		TMRh20
+ * \author		Swedish Institute of Computer Science
+ * \date		2006-2017
+ *
+ * \copyright	Copyright (c) 2006, Swedish Institute of Computer Science.
+ * \parblock
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,100 +33,124 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
+ * \endparblock
  *
- * This file is part of the uIP TCP/IP stack
- * Modified 2015: TMRh20
+ *
+ * \name User Configuration Options
+ * @{
+ *
+ * uIP has a number of configuration options that can be overridden
+ * for each project. These are kept in a project-specific uip-conf.h
+ * file and all configuration names have the prefix UIP_CONF.
+ * Some of these options are specific to RF24Ethernet.
+ *
+
  */
 
-#ifndef __UIP_CONF_H__
-#define __UIP_CONF_H__
+#ifndef _UIP_CONF_H__
+#define _UIP_CONF_H__
 
 #include <inttypes.h>
 
 #include "RF24Network_config.h"
-/************* TMRh20: User Configuration *******************/
+
+
+/* -----[ User Configuration Options ]----- */
+
 /**
-@defgroup UipConfiguration
+ * \defgroup UipConfiguration
+ *
+ * User Configuration Options
+ * @{
+ */
 
-User Configuration Options
-/* @{ */
-
-/** Maximum number of TCP connections. */
+/**
+ * \def UIP_CONF_MAX_CONNECTIONS	Defines the maximum number of TCP connections.
+ * \def UIP_CONF_MAX_LISTENPORTS	Defines the maximum number of listening TCP ports.
+ */
 #define UIP_CONF_MAX_CONNECTIONS 1
-
-/** Maximum number of listening TCP ports. */
 #define UIP_CONF_MAX_LISTENPORTS 1
 
 /**
- * uIP buffer size.
- * @note For simplicity, this is automatically set to the MAX_PAYLOAD_SIZE configured in the RF24Network_conf.h file, but can be configured independently
- * of RF24Network if desired.
- * 
+ * \def UIP_CONF_BUFFER_SIZE	Defines the uIP buffer size.
+ *
+ * \note	For simplicity, this is automatically set to the MAX_PAYLOAD_SIZE configured in the RF24Network_conf.h file,
+ *			but can be configured independently of RF24Network if desired.
+ *
  * Notes:
- * 1. Nodes can use different buffer sizes, direct TCP communication is limited to the smallest  
- *  ie: A RPi can be configured to use 1500byte TCP windows, with Arduino nodes using only 120byte TCP windows.
+ * 1. Nodes can use different buffer sizes; direct TCP communication is limited to the smallest
+ *    (ie: A RPi can be configured to use 1500 byte TCP windows, with Arduino nodes using only 120 byte TCP windows.)
  * 2. Routing nodes handle traffic at the link-layer, so the MAX_PAYLOAD_SIZE is not important, unless they are
- * running RF24Ethernet.  
- * 3. Nodes running RF24Ethernet generally do not need to support RF24Network user payloads. Edit RF24Network_config.h  
- *  and uncomment #define DISABLE_USER_PAYLOADS. This will free memory not used with RF24Ethernet. 
- * 4. The user buffers are automatically configured to (Buffer Size - Link Layer Header Size - TCP Header Size) so
- * using RF24Mesh will decrease payloads by 14 bytes.
+ *    running RF24Ethernet.
+ * 3. Nodes running RF24Ethernet generally do not need to support RF24Network user payloads. Edit RF24Network_config.h
+ *    and uncomment  <TT>#define DISABLE_USER_PAYLOADS</TT>. This will free memory not used with RF24Ethernet.
+ * 4. The user buffers are automatically configured to (Buffer Size - Link Layer Header Size - TCP Header Size), so
+ *    using RF24Mesh will decrease payloads by 14 bytes.
  * 5. Larger buffer sizes increase throughput for individual nodes, but can impact other network traffic.
- * 6. Max usable value is 512
+ * 6. The maximum usable value is 512
  */
-
 #define UIP_CONF_BUFFER_SIZE MAX_PAYLOAD_SIZE
+
 /**
-  * <b>Optional:</b> Uncomment to disable  
-  *
-  * Adjust the length of time after which an open connection will be timed out.  
-  * 
-  * If uIP is polling the established connection, but an ack or data is not received for this duration in ms, kill the connection.
-  */
+ * \def UIP_CONNECTION_TIMEOUT	Adjust the length of time after which an open connection will be timed out.
+ *
+ * <b>Optional:</b> Uncomment to disable
+ *
+ * If uIP is polling the established connection, but an ACK or data is not received for this duration in ms, then kill
+ * the connection.
+ */
 #define UIP_CONNECTION_TIMEOUT 30000
 
 /**
- * SLIP/TUN - 14 for Ethernet/TAP & 0 for TUN/SLIP  
- *  
- * Ethernet headers add an additional 14 bytes to each payload.  
- *  
- * RF24Mesh generally needs to be used if setting this to 0 and using a TUN or SLIP interface  
+ * \def UIP_CONF_LLH_LEN	Defines any additional link-layer overhead, in bytes.
+ *
+ * \c 14 for \b Ethernet/TAP
+ * \c 0 for \b TUN/SLIP
+ *
+ * \note Ethernet headers add an additional 14 bytes to each payload.
+ * \note \b RF24Mesh generally needs to be used if setting this to \c 0 and using a \e TUN or \e SLIP interface
  */
 #define UIP_CONF_LLH_LEN 0
 
 /**
  * UDP support on or off (required for DNS)
- * @note DNS support typically requires larger payload sizes (250-300). It seems that DNS servers will typically respond
- * with a single address if requesting an address of www.google.com vs google.com, and this will work with the default payload size
+ *
+ * \note	DNS support typically requires larger payload sizes (250-300). It seems that DNS servers will typically
+ *			respond with a single address if requesting an address of \b www.google.com vs \b google.com, and this will
+ *			work with the default payload size.
  */
- 
-#define UIP_CONF_UDP             0
-//#define UIP_CONF_BROADCAST       0
-//#define UIP_CONF_UDP_CONNS       1
+#define UIP_CONF_UDP			0
+//#define UIP_CONF_BROADCAST	0
+//#define UIP_CONF_UDP_CONNS	1
 
-  /***@}*/
-  /**
-   * @name Advanced Operation
-   *
-   *  For advanced configuration of RF24Ethernet
-   */
-  /***@{*/
 
- /**
-  * 
-  * Adjust the rate at which the IP stack performs periodic processing.  
-  * The periodic timer will be called at a rate of 1 second divided by this value  
-  *  
-  * Increase this value to reduce response times and increase throughput during user interactions.  
-  * @note: Increasing this value will increase throughput for individual nodes, but can impact other network traffic.  
-  */
+
+/**
+ * @}
+ *
+ * \name Advanced Operation
+ *
+ * For advanced configuration of RF24Ethernet
+ *
+ * @{
+ */
+
+
+
+/**
+ *
+ * Adjust the rate at which the IP stack performs periodic processing.
+ * The periodic timer will be called at a rate of 1 second divided by this value
+ *
+ * Increase this value to reduce response times and increase throughput during user interactions.
+ * @note: Increasing this value will increase throughput for individual nodes, but can impact other network traffic.
+ */
 #define UIP_TIMER_DIVISOR 16
 
 /**
  * If operating solely as a server, disable the ability to open TCP connections as a client by setting to 0
  * Saves memory and program space.
  */
- 
 #define UIP_CONF_ACTIVE_OPEN 1
 
 /**
@@ -138,11 +159,11 @@ User Configuration Options
 #define UIP_CONF_UDP_CHECKSUMS   0
 
 /**
-* uIP User Output buffer size  
-*  
-* The output buffer size determines the max 
-* length of strings that can be sent by the user, and depends on the uip buffer size  
-*  
+* uIP User Output buffer size
+*
+* The output buffer size determines the max
+* length of strings that can be sent by the user, and depends on the uip buffer size
+*
 * Must be <=   UIP_BUFSIZE - UIP_LLH_LEN - UIP_TCPIP_HLEN
 * @note Must be an odd number or the TCP/IP sequence gets out of order with payloads larger than 511 bytes
 * I think this might be a bug or missing feature of the uip stack
@@ -156,23 +177,26 @@ User Configuration Options
 #endif
 
  /**
-  * <b>Optional:</b> Used with UIP_CONNECTION_TIMEOUT  
+  * <b>Optional:</b> Used with UIP_CONNECTION_TIMEOUT
   *
-  * If an open connection is not receiving data, the connection will be restarted.  
-  * 
+  * If an open connection is not receiving data, the connection will be restarted.
+  *
   * Adjust the initial delay period before restarting a connection that has already been restarted
-  * 
+  *
   * For small payloads (96-120 bytes) with a fast connection, this value can be as low as ~750ms or so.
   * When increasing the uip buffer size, this value should be increased, or
   * the window may be reopened while the requested data is still being received, hindering traffic flow.
   */
 #define UIP_WINDOW_REOPEN_DELAY  5150
 
-/* @} */ 
+/* @} */
 /** @} */
-/******************** END USER CONFIG ***********************************/
 
-/********** TMRh20: This option is not yet valid **********/
+
+/* -----[ END: User Configuration Options ]----- */
+
+
+/* -----( TMRh20: This option is not yet valid )----- */
 /* for TCP */
 #define UIP_SOCKET_NUMPACKETS    1
 
@@ -184,7 +208,7 @@ User Configuration Options
  * @note Must be an odd number or the TCP/IP sequence gets out of order with payloads larger than 511 bytes
  * I think this might be a bug or missing feature of the uip stack
  */
- 
+
 #if UIP_CONF_BUFFER_SIZE >= 512
   #define UIP_CONF_RECEIVE_WINDOW 511
 #else
